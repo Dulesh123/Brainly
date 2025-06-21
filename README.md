@@ -42,7 +42,7 @@ tsc -b
 node dist/index.js
 
 # 5️⃣ Set Up the Frontend
-cd ../Brainly-Frontend
+cd ../Brainly-Frontend/frontend
 npm install
 
 # 6️⃣ Start the Frontend
