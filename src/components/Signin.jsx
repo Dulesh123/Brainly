@@ -16,9 +16,15 @@ export default function Signin() {
     email: "",
     password: "",
   });
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  // ✅ FIX: Added missing handleChange function
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
 
   function handleClose() {
     navigate("/home");
@@ -33,20 +39,30 @@ export default function Signin() {
     }
 
     setLoading(true);
+
     try {
-      const response = await axios.post("https://brainly-be-r3zm.onrender.com/signin", formData);
+      const response = await axios.post(
+        "https://brainly-be-r3zm.onrender.com/signin",
+        formData
+      );
+
       if (response.data?.token) {
         localStorage.setItem("token", response.data.token);
-        const userdata=response.data.user;
-       dispatch(
-  Setsignupform({
-    f_name: userdata.f_name,
-    l_name: userdata.l_name, 
-    email: userdata.email,
-  })
-);
-        console.log(localStorage.getItem("token"));
+
+        const userdata = response.data?.user || {};
+
+        dispatch(
+          Setsignupform({
+            f_name: userdata.f_name || "",
+            l_name: userdata.l_name || "",
+            email: userdata.email || "",
+            password: "",
+          })
+        );
+
+        console.log("User saved in Redux:", userdata);
       }
+
       navigate("/home");
     } catch (e) {
       const msg = e?.response?.data?.message;
@@ -59,15 +75,35 @@ export default function Signin() {
   async function handleGoogleSuccess(googleResponse) {
     setError("");
     setGoogleLoading(true);
+
     try {
       const res = await axios.post(
         "https://brainly-be-r3zm.onrender.com/google-signin",
         {},
-        { headers: { token: googleResponse.credential } }
+        {
+          headers: {
+            token: googleResponse.credential,
+          },
+        }
       );
+
       if (res.data?.token) {
         localStorage.setItem("token", res.data.token);
+
+        const userdata = res.data?.user || {};
+
+        dispatch(
+          Setsignupform({
+            f_name: userdata.f_name || "",
+            l_name: userdata.l_name || "",
+            email: userdata.email || "",
+            password: "",
+          })
+        );
+
+        console.log("Google User saved in Redux:", userdata);
       }
+
       navigate("/home");
     } catch (e) {
       const msg = e?.response?.data?.message;
@@ -75,14 +111,6 @@ export default function Signin() {
     } finally {
       setGoogleLoading(false);
     }
-  }
-
-  function handleChange(e) {
-    setError("");
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
   }
 
   return (
