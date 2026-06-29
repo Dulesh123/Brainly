@@ -114,7 +114,7 @@ export default function Filedata() {
       formData.append("file", file);
 
       const response = await axios.post(
-        "http://localhost:3000/add-file",
+        "https://brainly-be-r3zm.onrender.com/add-file",
         formData,
         {
           headers: {

@@ -34,7 +34,7 @@ export default function Signin() {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/signin", formData);
+      const response = await axios.post("https://brainly-be-r3zm.onrender.com/signin", formData);
       if (response.data?.token) {
         localStorage.setItem("token", response.data.token);
         const userdata=response.data.user;
@@ -61,7 +61,7 @@ export default function Signin() {
     setGoogleLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/google-signin",
+        "https://brainly-be-r3zm.onrender.com/google-signin",
         {},
         { headers: { token: googleResponse.credential } }
       );

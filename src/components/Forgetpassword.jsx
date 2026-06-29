@@ -19,7 +19,7 @@ export default function Forgotpassword() {
     if (!email) return;
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/forgot-password", { email });
+      await axios.post("https://brainly-be-r3zm.onrender.com/forgot-password", { email });
       setSent(true);
     } catch (err) {
       alert("Something went wrong. Please try again.");

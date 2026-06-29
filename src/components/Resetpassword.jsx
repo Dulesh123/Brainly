@@ -59,7 +59,7 @@ export default function Resetpassword() {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/reset-password", {
+      await axios.post("https://brainly-be-r3zm.onrender.com/reset-password", {
         email,
         newPassword,
         token,
