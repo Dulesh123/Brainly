@@ -19,6 +19,12 @@ export default function Signup() {
     email: "",
     password: "",
   });
+  const [googleData, setgoogleData] = useState({
+    f_name: "",
+    l_name: "",
+    email: "",
+    
+  });
   const navigate = useNavigate();
 
   function handleClose() {
@@ -214,6 +220,12 @@ export default function Signup() {
                     { headers: { token: response.credential } }
                   );
                   if (res.status === 201) {
+                    setgoogleData({
+    f_name: res.data.user.f_name,
+    l_name: res.data.user.l_name,
+    email: res.data.user.email,
+  });
+   dispatch(Setsignupform(googleData));
                     navigate("/dashboard");
                   }
                 } catch (error) {
