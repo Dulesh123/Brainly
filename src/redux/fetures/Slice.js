@@ -28,9 +28,12 @@ export const Slice = createSlice({
   },
 
   reducers: {
-    Setsignupform: (state, action) => {
-      state.signupform = action.payload;
-    },
+   Setsignupform: (state, action) => {
+  state.signupform = {
+    ...state.signupform,
+    ...action.payload,
+  };
+},
 
     SetDataType: (state, action) => {
       state.dataType.type = action.payload;
@@ -38,9 +41,12 @@ export const Slice = createSlice({
     SetItem:(state,action)=>{
       state.item.type=action.payload
     },
-    Setcarddata:(state,action)=>{
-      state.item.carddata=action.payload
-    }
+  Setcarddata: (state, action) => {
+  state.carddata = {
+    ...state.carddata,
+    ...action.payload,
+  };
+},
   },
 });
 
