@@ -8,26 +8,43 @@ export default function Forgotpassword() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); // ✅ Fix 1: added missing error state
 
   const navigate = useNavigate();
 
   function handleClose() {
     navigate("/home");
   }
+async function handleSendLink() {
+  if (!email) return;
+  setLoading(true);
+  setError("");
+  try {
+    const res = await axios.post(
+      "https://brainly-be-r3zm.onrender.com/forgot-password",
+      
+      { email }
+    );
+    console.log("✅ Response:", res.data);
+    setSent(true);
+  } catch (err) {
+    // This tells you exactly what's failing
+    console.error("❌ Status:", err?.response?.status);
+    console.error("❌ Data:", err?.response?.data);
+    console.error("❌ Message:", err?.message);
 
-  async function handleSendLink() {
-    if (!email) return;
-    setLoading(true);
-    try {
-      await axios.post("https://brainly-be-r3zm.onrender.com/forgot-password", { email });
-      setSent(true);
-    } catch (err) {
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    const status = err?.response?.status;
+    if (status === 429) {
+      setError("A reset link was already sent. Please wait 5 minutes before trying again.");
+    } else if (status === 500) {
+      setError("Something went wrong. Please try again later.");
+    } else {
+      setError(err?.message || "Something went wrong. Please try again.");
     }
+  } finally {
+    setLoading(false);
   }
-
+}
   return (
     <>
       <style>{`
@@ -130,6 +147,16 @@ export default function Forgotpassword() {
           animation: fp-rise 0.3s cubic-bezier(0.34,1.36,0.64,1);
         }
 
+        .fp-error-box {
+          background: rgba(239,68,68,0.08);
+          border: 1px solid rgba(239,68,68,0.2);
+          border-radius: 12px;
+          padding: 14px;
+          display: flex; gap: 12px; align-items: flex-start;
+          margin-bottom: 20px;
+          animation: fp-rise 0.3s cubic-bezier(0.34,1.36,0.64,1);
+        }
+
         @keyframes spin { to { transform: rotate(360deg) } }
 
         @media (max-width: 380px) {
@@ -194,6 +221,21 @@ export default function Forgotpassword() {
                 </p>
                 <p style={{ margin: 0, fontSize: 12, color: "#86efac", fontFamily: "'Inter', sans-serif", lineHeight: 1.5 }}>
                   Check your inbox at <strong style={{ color: "#4ade80" }}>{email}</strong>. The link expires in 5 minutes.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* ✅ Fix 1: Error state — same style pattern as success box */}
+          {error && (
+            <div className="fp-error-box">
+              <i className="ti ti-alert-circle" style={{ fontSize: 20, color: "#f87171", flexShrink: 0, marginTop: 1 }} />
+              <div>
+                <p style={{ margin: "0 0 2px", fontSize: 13, fontWeight: 600, color: "#f87171", fontFamily: "'Inter', sans-serif" }}>
+                  Something went wrong
+                </p>
+                <p style={{ margin: 0, fontSize: 12, color: "#fca5a5", fontFamily: "'Inter', sans-serif", lineHeight: 1.5 }}>
+                  {error}
                 </p>
               </div>
             </div>
