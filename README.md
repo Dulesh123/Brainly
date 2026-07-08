@@ -4,7 +4,7 @@ Brainly is a full-stack **MERN** application that helps users organize their dig
 
 ## 🌐 Live Demo
 
-**Frontend:** https://brainly-app-five.vercel.app
+**Check Live:** https://brainly-app-five.vercel.app
 
 **Frontend Hosting:** Vercel
 
